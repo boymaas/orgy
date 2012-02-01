@@ -42,15 +42,14 @@ def load_org_example name
   File.open("spec/data/org-file-#{name}.org").read
 end
 
-
-describe OrgMode::FileParser do
+describe OrgMode::Parser do
   context ".parse_into_tokens" do
     it "should divide data up correctly" do
       org_data = <<-org.gsub(/^\s{8}/,'')
         * First
         ** Second
       org
-      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
       b.should be_empty
       n.should == [["* First", ""], ["** Second", ""]]
       e.should be_empty
@@ -62,7 +61,7 @@ describe OrgMode::FileParser do
         ** Second
            Content for nested node
       org
-      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
       b.should be_empty
       n.should == [["* First", "  Content for first node"], ["** Second", "   Content for nested node"]]
       e.should be_empty
@@ -71,7 +70,7 @@ describe OrgMode::FileParser do
       org_data = <<-org.gsub(/^\s{8}/,'')
         Just some textfile without any nodes
       org
-      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
       b.should == 'Just some textfile without any nodes'
       n.should == []
       e.should be_empty
@@ -79,7 +78,7 @@ describe OrgMode::FileParser do
     it "should take an empty string" do
       org_data = <<-org.gsub(/^\s{8}/,'')
       org
-      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
       b.should be_empty
       n.should == []
       e.should be_empty
@@ -89,14 +88,25 @@ describe OrgMode::FileParser do
   context ".parse" do
     let(:org_data) { load_org_example '01-simple-node-structure' }
     it "should just parse the file" do
-      parsed = OrgMode::FileParser.parse(org_data)
+      parsed = OrgMode::Parser.parse(org_data)
     end
-    it "should return a OrgMode::File" do
-      parsed = OrgMode::FileParser.parse(org_data)
-      parsed.class.should == OrgMode::File
-    end
-    it "parses the tree correctly" do
-      # how do we test for this ... 
+    context 'with a parsed org_file' do
+      let(:org_file) { OrgMode::Parser.parse(org_data) }
+
+      it "should return an OrgMode::File" do
+        org_file.should be_an_instance_of( OrgMode::File )
+      end
+
+      it "parses the tree correctly" do
+        org_file.nodes.length.should == 12
+      end
+
+      it "has an empty beginning" do
+        org_file.header.should be_empty
+      end
+      it "has an empty ending" do
+        org_file.footer.should be_empty
+      end
     end
   end
 end

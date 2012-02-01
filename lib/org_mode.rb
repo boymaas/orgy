@@ -2,24 +2,28 @@ require "org_mode/version"
 
 module OrgMode
   # Your code goes here...
-  class FileParser
+  class Parser
     NodeTitle = %r{ 
       ^   # beginning of line
       (
-      \*+ # multiple stars 
-      \s+ # one or more whitespace
-      .*  # anything
+        \*+ # multiple stars 
+        \s+ # one or more whitespace
+        .*  # anything
       )
-      $   # untill end of line
+      $   # untill _end of line
     }xs
 
     class << self
 
       def parse(buffer)
+        b, n, e =  Parser.parse_buffer(buffer)
+        n.map! { |e| Node.new(*e) }
+        return File.new(b,n,e)
+      end
+
+      def parse_buffer(buffer)
         beginning_of_file, nodes, ending_of_file =
           parse_into_tokens(buffer)
-        tokens = buffer.split(NodeTitle)
-        OrgMode::File.new
       end
 
 
@@ -48,22 +52,26 @@ module OrgMode
 
         [ beginning_of_file, nodes, "" ]
       end
-
-      def grab_until_first_node
-        @buffer.take
-      end
-
-      def grab_all_nodes
-      end
-
-      def grab_last_node_until_end
-      end
     end
+  end
+  
+  class File
+    attr_accessor :header, :nodes, :footer
+    def initialize(header, nodes, footer)
+      @header = header
+      @footer = footer
+      @nodes = nodes
+    end
+  end
+
+  class Node
+    attr_accessor :title, :content
+    
+    def initialize(title, content)
+      @title = title
+      @content = content
+    end
+  end
 end
 
-class File
-end
 
-class Node
-end
-end
