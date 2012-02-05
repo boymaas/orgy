@@ -15,9 +15,18 @@ module OrgMode
     class << self
 
       def parse(buffer)
-        b, n, e =  FileParser.parse_buffer(buffer)
-        n.map! { |m| NodeParser.parse(*m) }
-        return File.new(b,n,e)
+        b, nodes, e =  parse_buffer(buffer)
+
+        parent_stack = []
+        nodes.map! do |title, content| 
+          node = NodeParser.parse(title,content) 
+          node.parent = parent_stack[node.stars - 1]
+          if node.parent
+            node.parent.children << node
+          end
+          parent_stack[node.stars] = node
+        end
+        return File.new(b,nodes,e)
       end
 
       def parse_buffer(buffer)
