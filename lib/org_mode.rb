@@ -65,11 +65,35 @@ module OrgMode
   end
 
   class Node
-    attr_accessor :title, :content
+    attr_accessor :title, :content, :stars, :indent, :date, :todo_state
     
     def initialize(title, content)
       @title = title
       @content = content
+      parse
+    end
+
+    private
+
+    def parse
+      parse_title
+      parse_extract_dates
+    end
+
+    def parse_title
+      matches = @title.match( /^(\*+)\s+(TODO|DONE)?(.*)$/ )
+      @stars      = matches[1].length
+      @todo_state = matches[2]
+      @title      = matches[3]
+      @indent     = @stars + 1
+    end
+
+    DateRegexp = /<(\d+-\d+-\d+ (\w{3})(\s\d+:\d+)?)>/
+    def parse_extract_dates
+       @date = title.match(DateRegexp).to_a[1] 
+       @title = title.gsub(DateRegexp, '') 
+
+       @date &&= DateTime.parse(@date)
     end
   end
 end

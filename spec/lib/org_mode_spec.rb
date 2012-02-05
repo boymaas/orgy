@@ -118,9 +118,129 @@ end
 
 describe OrgMode::Node do
   context ".parse" do
-    it "parses the title correctly"
-    it "parses the content correctly"
-    it "parses the date from the title correcty"
-    it "parses the TODO DONE keywords correctly"
+    context "title" do
+      context "standard node title" do
+        let(:node) {OrgMode::Node.new('** Standard node title', nil)}
+        it "parses the title correctly" do
+          node.title.should == 'Standard node title'
+        end
+        it "determines the correct stars" do
+          node.stars.should == 2
+        end
+        it "determines the correct indent" do
+          node.indent.should == 3
+        end
+      end
+      context "level deeper node title" do
+        let(:node) {OrgMode::Node.new('*** Standard node title one level deeper', nil)}
+        it "parses the title correctly" do
+          node.title.should == 'Standard node title one level deeper'
+        end
+        it "determines the correct stars" do
+          node.stars.should == 3
+        end
+        it "determines the correct indent" do
+          node.indent.should == 4
+        end
+      end
+      context "node title with date" do
+        let(:node) {OrgMode::Node.new('** Date node title <2012-02-02 Wed>', nil)}
+        it "parses the date from the title correcty" do
+          node.date.strftime('%Y-%m-%d').should == '2012-02-02'
+        end
+      end
+      context "node title with date time" do
+        let(:node) {OrgMode::Node.new('** Date node title <2012-02-03 Wed 15:15>', nil)}
+        it "parses the date-time from the title correcty" do
+          node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
+        end
+      end
+      context "parses TODO states correctly" do
+        let(:node) {OrgMode::Node.new('** TODO Date node title', nil)}
+        it "parses the TODO keyword correctly" do
+          node.todo_state.should == 'TODO'
+        end
+        context "parses DONE state correctly" do
+          let(:node) {OrgMode::Node.new('** DONE Date node title', nil)}
+          it "parses the TODO keyword correctly" do
+            node.todo_state.should == 'DONE'
+          end
+        end
+      end
+    end
+    context "content" do
+      context "correctly indented" do
+        before do
+          org_title, *org_content = <<-eos.gsub(/^\s{10}/,'').lines.to_a
+          *** Title
+              Content belonging
+              at a certain indent
+              should be parsed correctly
+          eos
+          @node = OrgMode::Node.new(org_title, org_content.join) 
+        end
+        it "parses content and removes indent" do
+          @node.content.should == <<-eos.gsub(/^\s{10}/,'')
+          Content belonging
+          at a certain indent
+          should be parsed correctly
+          eos
+        end
+      end
+      context "too far" do
+        before do
+          org_title, *org_content = <<-eos.gsub(/^\s{10}/,'').lines.to_a
+          *** Title
+                Content belonging
+                at a certain indent
+                should be parsed correctly
+          eos
+          @node = OrgMode::Node.new(org_title, org_content.join) 
+        end
+        it "parses content and removes indent" do
+          @node.content.should == <<-eos.gsub(/^\s{10}/,'')
+            Content belonging
+            at a certain indent
+            should be parsed correctly
+          eos
+        end
+      end
+      context "indented in content block" do
+        before do
+          org_title, *org_content = <<-eos.gsub(/^\s{10}/,'').lines.to_a
+          *** Title
+              Content belonging
+                at a certain indent
+                should be parsed correctly
+          eos
+          @node = OrgMode::Node.new(org_title, org_content.join) 
+        end
+        it "parses content and removes indent" do
+          @node.content.should == <<-eos.gsub(/^\s{10}/,'')
+          Content belonging
+            at a certain indent
+            should be parsed correctly
+          eos
+        end
+      end
+      context "one row outdented" do
+        before do
+          org_title, *org_content = <<-eos.gsub(/^\s{10}/,'').lines.to_a
+          *** Title
+            Content belonging
+              at a certain indent
+              should be parsed correctly
+          eos
+          @node = OrgMode::Node.new(org_title, org_content.join) 
+        end
+        it "parses content and removes indent" do
+          @node.content.should == <<-eos.gsub(/^\s{10}/,'')
+          Content belonging
+            at a certain indent
+            should be parsed correctly
+          eos
+        end
+      end
+    end
   end
 end
