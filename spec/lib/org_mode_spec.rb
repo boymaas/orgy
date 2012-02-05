@@ -1,4 +1,5 @@
 require 'org_mode'
+require 'org_mode/parser'
 
 # Parser
 # ------
@@ -42,14 +43,14 @@ def load_org_example name
   File.open("spec/data/org-file-#{name}.org").read
 end
 
-describe OrgMode::Parser do
+describe OrgMode::FileParser do
   context ".parse_into_tokens" do
     it "should divide data up correctly" do
       org_data = <<-org.gsub(/^\s{8}/,'')
         * First
         ** Second
       org
-      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
       b.should be_empty
       n.should == [["* First", ""], ["** Second", ""]]
       e.should be_empty
@@ -61,7 +62,7 @@ describe OrgMode::Parser do
         ** Second
            Content for nested node
       org
-      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
       b.should be_empty
       n.should == [["* First", "  Content for first node"], ["** Second", "   Content for nested node"]]
       e.should be_empty
@@ -70,7 +71,7 @@ describe OrgMode::Parser do
       org_data = <<-org.gsub(/^\s{8}/,'')
         Just some textfile without any nodes
       org
-      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
       b.should == 'Just some textfile without any nodes'
       n.should == []
       e.should be_empty
@@ -78,7 +79,7 @@ describe OrgMode::Parser do
     it "should take an empty string" do
       org_data = <<-org.gsub(/^\s{8}/,'')
       org
-      b,n,e = OrgMode::Parser.parse_into_tokens(org_data)
+      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
       b.should be_empty
       n.should == []
       e.should be_empty
@@ -88,10 +89,10 @@ describe OrgMode::Parser do
   context ".parse" do
     let(:org_data) { load_org_example '01-simple-node-structure' }
     it "should just parse the file" do
-      parsed = OrgMode::Parser.parse(org_data)
+      parsed = OrgMode::FileParser.parse(org_data)
     end
     context 'with a parsed org_file' do
-      let(:org_file) { OrgMode::Parser.parse(org_data) }
+      let(:org_file) { OrgMode::FileParser.parse(org_data) }
 
       it "should return an OrgMode::File" do
         org_file.should be_an_instance_of( OrgMode::File )
@@ -116,11 +117,11 @@ describe OrgMode::File do
   it "holds all the configuration data"
 end
 
-describe OrgMode::Node do
+describe OrgMode::NodeParser do
   context ".parse" do
     context "title" do
       context "standard node title" do
-        let(:node) {OrgMode::Node.new('** Standard node title', nil)}
+        let(:node) {OrgMode::NodeParser.parse('** Standard node title', nil)}
         it "parses the title correctly" do
           node.title.should == 'Standard node title'
         end
@@ -132,7 +133,7 @@ describe OrgMode::Node do
         end
       end
       context "level deeper node title" do
-        let(:node) {OrgMode::Node.new('*** Standard node title one level deeper', nil)}
+        let(:node) {OrgMode::NodeParser.parse('*** Standard node title one level deeper', nil)}
         it "parses the title correctly" do
           node.title.should == 'Standard node title one level deeper'
         end
@@ -144,24 +145,24 @@ describe OrgMode::Node do
         end
       end
       context "node title with date" do
-        let(:node) {OrgMode::Node.new('** Date node title <2012-02-02 Wed>', nil)}
+        let(:node) {OrgMode::NodeParser.parse('** Date node title <2012-02-02 Wed>', nil) }
         it "parses the date from the title correcty" do
           node.date.strftime('%Y-%m-%d').should == '2012-02-02'
         end
       end
       context "node title with date time" do
-        let(:node) {OrgMode::Node.new('** Date node title <2012-02-03 Wed 15:15>', nil)}
+        let(:node) {OrgMode::NodeParser.parse('** Date node title <2012-02-03 Wed 15:15>', nil)}
         it "parses the date-time from the title correcty" do
           node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
         end
       end
       context "parses TODO states correctly" do
-        let(:node) {OrgMode::Node.new('** TODO Date node title', nil)}
+        let(:node) {OrgMode::NodeParser.parse('** TODO Date node title', nil)}
         it "parses the TODO keyword correctly" do
           node.todo_state.should == 'TODO'
         end
         context "parses DONE state correctly" do
-          let(:node) {OrgMode::Node.new('** DONE Date node title', nil)}
+          let(:node) {OrgMode::NodeParser.parse('** DONE Date node title', nil)}
           it "parses the TODO keyword correctly" do
             node.todo_state.should == 'DONE'
           end
@@ -177,7 +178,7 @@ describe OrgMode::Node do
               at a certain indent
               should be parsed correctly
           eos
-          @node = OrgMode::Node.new(org_title, org_content.join) 
+          @node = OrgMode::NodeParser.parse(org_title, org_content.join)
         end
         it "parses content and removes indent" do
           @node.content.should == <<-eos.gsub(/^\s{10}/,'')
@@ -195,7 +196,7 @@ describe OrgMode::Node do
                 at a certain indent
                 should be parsed correctly
           eos
-          @node = OrgMode::Node.new(org_title, org_content.join) 
+          @node = OrgMode::NodeParser.parse(org_title, org_content.join)
         end
         it "parses content and removes indent" do
           @node.content.should == <<-eos.gsub(/^\s{10}/,'')
@@ -213,7 +214,7 @@ describe OrgMode::Node do
                 at a certain indent
                 should be parsed correctly
           eos
-          @node = OrgMode::Node.new(org_title, org_content.join) 
+          @node = OrgMode::NodeParser.parse(org_title, org_content.join)
         end
         it "parses content and removes indent" do
           @node.content.should == <<-eos.gsub(/^\s{10}/,'')
@@ -231,7 +232,7 @@ describe OrgMode::Node do
               at a certain indent
               should be parsed correctly
           eos
-          @node = OrgMode::Node.new(org_title, org_content.join) 
+          @node = OrgMode::NodeParser.parse(org_title, org_content.join)
         end
         it "parses content and removes indent" do
           @node.content.should == <<-eos.gsub(/^\s{10}/,'')
@@ -253,7 +254,7 @@ describe OrgMode::Node do
             at a certain indent
             should be parsed correctly
         eos
-        @node = OrgMode::Node.new(org_title, org_content.join) 
+        @node = OrgMode::NodeParser.parse(org_title, org_content.join)
         @node.content.should == <<-eos.gsub(/^\s{8}/,'')
         Content belonging
         at a certain indent
@@ -270,7 +271,7 @@ describe OrgMode::Node do
             
             
         eos
-        @node = OrgMode::Node.new(org_title, org_content.join) 
+        @node = OrgMode::NodeParser.parse(org_title, org_content.join)
         @node.content.should == <<-eos.gsub(/^\s{8}/,'')
         Content belonging
         at a certain indent
