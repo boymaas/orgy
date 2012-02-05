@@ -1,9 +1,8 @@
 require "org_mode/version"
 
 module OrgMode
-  # Your code goes here...
   class Parser
-    NodeTitle = %r{ 
+    RxNodeTitle = %r{ 
       ^   # beginning of line
       (
         \*+ # multiple stars 
@@ -40,7 +39,7 @@ module OrgMode
       #   returned. This function will never return nil
       # 
       def parse_into_tokens buffer
-        tokens = buffer.split(NodeTitle).map(&:rstrip)
+        tokens = buffer.split(RxNodeTitle).map(&:rstrip)
         beginning_of_file = tokens.shift || ''
 
         nodes = []
@@ -89,15 +88,15 @@ module OrgMode
       @indent     = @stars + 1
     end
 
-    DateRegexp = /<(\d+-\d+-\d+ (\w{3})(\s\d+:\d+)?)>/
+    RxDateRegexp = /<(\d+-\d+-\d+ (\w{3})(\s\d+:\d+)?)>/
     def parse_extract_dates
-       @date = title.match(DateRegexp).to_a[1] 
-       @title = title.gsub(DateRegexp, '') 
+       @date = title.match(RxDateRegexp).to_a[1] 
+       @title = title.gsub(RxDateRegexp, '') 
 
        @date &&= DateTime.parse(@date)
     end
 
-    EmptyLine = /^\s*$/
+    RxEmptyLine = /^\s*$/
     def parse_content
       return unless @content
 
@@ -105,7 +104,12 @@ module OrgMode
       @content.gsub!(/^\s{#{minimum_indent}}/m, '')
 
       # remove empty lines at beginning and ending
-      @content = @content.lines.drop_while {|e| e =~ EmptyLine}.reverse.drop_while {|e| e =~ EmptyLine}.reverse.join
+      @content = @content.lines.
+                          drop_while {|e| e =~ RxEmptyLine}.
+                          reverse.
+                          drop_while {|e| e =~ RxEmptyLine}.
+                          reverse.
+                          join
     end
   end
 end
