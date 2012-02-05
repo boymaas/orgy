@@ -1,7 +1,18 @@
+# Public: Domain objects
+# describing the elements of an org-mod file
+#
+# OrgMode::File encapsulates the org file, with all its settings
+# customizations, code blocks, TODO statusses.
+#
+# This domain model will be build using one of the parsers which
+# you can find somewhere in lib/org_mode/parser*
+#
+# Writing this domain-model to a file can be done using
+# one of the Writes in lib/org_mode/writers/*
+#
 require "org_mode/version"
 
 module OrgMode
-
   class File
     attr_accessor :header, :nodes, :footer
     def initialize(header, nodes, footer)
@@ -29,5 +40,3 @@ module OrgMode
     end
   end
 end
-
-

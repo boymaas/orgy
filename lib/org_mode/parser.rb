@@ -1,3 +1,11 @@
+# Public: Org File format parser
+#
+# A simple regexp based parser for orgfiles. Works by simply dividng
+# the file in beginning, nodes, and ending. After this it will
+# parse the individual nodes extracting remaining detailed information.
+#
+# Parser is decoupled from object model to make it easy to write updated
+# parsers or use a database to serialize an org-mode file out of.
 require 'org_mode'
 
 module OrgMode
@@ -67,6 +75,13 @@ module OrgMode
 
     class << self
 
+      # Public: Parses a node in the org-mode file-format
+      # 
+      # title - a org-mode title, can contain date, todo statusses, tags
+      #         everything specified in the org-mod file format
+      # content - the content block, which can also contain org-mode format
+      #
+      # Return a OrgMode::Node containing all parsable information
       def parse(title,content)
         node = OrgMode::Node.new
         parse_title(node, title)
@@ -74,6 +89,8 @@ module OrgMode
         parse_content(node, content)
         node
       end
+
+      private
 
       def parse_title(node,title)
         matches = title.match( /^(\*+)\s+(TODO|DONE)?(.*)$/ )
@@ -108,8 +125,6 @@ module OrgMode
             reverse.
             join
         end
-
     end
-
   end
 end

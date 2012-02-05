@@ -1,0 +1,30 @@
+# Org-Mode file parser and writer
+
+Usin Vim for a long time, and having used e-macs for a while I got hooked on
+org-mode.  The flexible plain-tekst planning mode.
+
+Using org-mode was an eye-opener, brilliant idea but it turns out I am more of a VIM
+person.
+
+So this ruby-gem is result of this personal org-mode dissonance.
+
+## Goal
+
+Making lightweight/fast ruby org-mode executable to parse/reformat/analyse and
+report on my org-files or the one in my buffer. And following the Unix philosopy
+making a seperate process of it.
+
+## What I want
+
+* flexible parsers
+* flexible writers
+* database storage
+* org-mode website upload
+* well tested module
+* integration with vim
+* flexible reporting
+* remember mode
+
+## Code
+
+See: `lib/**/*.rb` for source and `spec/**/*.rb` for specs. Binaries not available yet.
