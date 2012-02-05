@@ -168,7 +168,7 @@ describe OrgMode::Node do
         end
       end
     end
-    context "content" do
+    context "content indentation" do
       context "correctly indented" do
         before do
           org_title, *org_content = <<-eos.gsub(/^\s{10}/,'').lines.to_a
@@ -240,6 +240,42 @@ describe OrgMode::Node do
             should be parsed correctly
           eos
         end
+      end
+    end
+    context "content whitespace" do
+      it "removes whitespace at beginning" do
+        org_title, *org_content = <<-eos.gsub(/^\s{8}/,'').lines.to_a
+        *** Title
+            
+            
+            
+            Content belonging
+            at a certain indent
+            should be parsed correctly
+        eos
+        @node = OrgMode::Node.new(org_title, org_content.join) 
+        @node.content.should == <<-eos.gsub(/^\s{8}/,'')
+        Content belonging
+        at a certain indent
+        should be parsed correctly
+        eos
+      end
+      it "removes whitespace at ending" do
+        org_title, *org_content = <<-eos.gsub(/^\s{8}/,'').lines.to_a
+        *** Title
+            Content belonging
+            at a certain indent
+            should be parsed correctly
+            
+            
+            
+        eos
+        @node = OrgMode::Node.new(org_title, org_content.join) 
+        @node.content.should == <<-eos.gsub(/^\s{8}/,'')
+        Content belonging
+        at a certain indent
+        should be parsed correctly
+        eos
       end
     end
   end

@@ -78,6 +78,7 @@ module OrgMode
     def parse
       parse_title
       parse_extract_dates
+      parse_content
     end
 
     def parse_title
@@ -94,6 +95,17 @@ module OrgMode
        @title = title.gsub(DateRegexp, '') 
 
        @date &&= DateTime.parse(@date)
+    end
+
+    EmptyLine = /^\s*$/
+    def parse_content
+      return unless @content
+
+      minimum_indent = ( @content.lines.map {|l| l =~ /\S/ }.reject(&:nil?) + [indent] ).min
+      @content.gsub!(/^\s{#{minimum_indent}}/m, '')
+
+      # remove empty lines at beginning and ending
+      @content = @content.lines.drop_while {|e| e =~ EmptyLine}.reverse.drop_while {|e| e =~ EmptyLine}.reverse.join
     end
   end
 end
