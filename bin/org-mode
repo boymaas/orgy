@@ -6,7 +6,8 @@ require 'org_mode/version'
 
 program :version, OrgMode::VERSION
 program :description, 'Formats and extracts information out of org-mode files'
- 
+program :help_formatter, :compact
+
 command :agenda do |c|
   c.syntax = 'org-mode agenda [options]'
   c.summary = ''
