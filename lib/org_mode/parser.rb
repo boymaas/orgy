@@ -106,13 +106,14 @@ module OrgMode
         #node.indent     = node.stars + 1
       end
 
-      RxDateRegexp = /<(\d+-\d+-\d+ (\w{3})(\s\d+:\d+)?)>/
+      RxDateRegexp = /<(\d+-\d+-\d+)(?:\s(?:\w{3})?(?:\s(\d+:\d+))?)(?:-(\d+:\d+))?>/
         def parse_extract_dates(node)
-          extracted_date = node.title.match(RxDateRegexp).to_a[1] 
+          _, extracted_date, start_time, end_time = node.title.match(RxDateRegexp).to_a
           node.title = node.title.gsub(RxDateRegexp, '') 
 
           if extracted_date
-            node.date = DateTime.parse(extracted_date)
+            node.date_start_time = DateTime.parse("#{extracted_date} #{start_time}")
+            node.date_end_time = DateTime.parse("#{extracted_date} #{end_time}")
           end
         end
 

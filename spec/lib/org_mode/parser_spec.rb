@@ -184,6 +184,18 @@ describe OrgMode::NodeParser do
           node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
         end
       end
+      context "node title with date-range" do
+        let(:node) {OrgMode::NodeParser.parse('** Date node title <2012-02-03 Wed 15:15-16:15>', nil)}
+        it "parses the date from the title correcty" do
+          node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
+        end
+        it "parses the start_tiem correctly" do
+          node.date_start_time.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
+        end
+        it "parses the end_time correctly" do
+          node.date_end_time.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 16:15'
+        end
+      end
       context "parses TODO states correctly" do
         let(:node) {OrgMode::NodeParser.parse('** TODO Date node title', nil)}
         it "parses the TODO keyword correctly" do
