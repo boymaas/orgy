@@ -7,6 +7,7 @@
 # Parser is decoupled from object model to make it easy to write updated
 # parsers or use a database to serialize an org-mode file out of.
 require 'org_mode'
+require 'date'
 
 module OrgMode
   class FileParser
