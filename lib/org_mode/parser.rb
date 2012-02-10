@@ -102,7 +102,7 @@ module OrgMode
         node.stars      = matches[1].length
         node.todo_state = matches[2]
         node.title      = matches[3]
-        node.indent     = node.stars + 1
+        #node.indent     = node.stars + 1
       end
 
       RxDateRegexp = /<(\d+-\d+-\d+ (\w{3})(\s\d+:\d+)?)>/

@@ -1,4 +1,6 @@
 require 'org_mode/parser'
+require 'org_mode/loader'
+require 'org_mode/reporters/agenda'
 
 require 'core_ext/string'
 require 'mustache'
@@ -14,22 +16,11 @@ module OrgMode::Commands
     # Returns the restult to stdout
     def execute(args, options)
 
-      @parsed_files = []
-      args.each do |file|
-        buffer = File.open(file).read
-        @parsed_files << OrgMode::FileParser.parse(buffer) 
-      end
-
-      # Get all nodes from all files
-      # extract scheduled items which are not done
-      nodes_of_interest = @parsed_files.map {|file| file.scheduled_nodes}.flatten
-      nodes_of_interest.reject!(&:done?)
-      noi_per_day = nodes_of_interest.group_by { |noi| noi.date.strftime('%Y-%m-%d') }
+      file_collection = OrgMode::Loader.load_and_parse_files(*args)
+      agenda_reporter = OrgMode::Reporters::Agenda.new(file_collection)
 
       tmpl_vars = {}
-      tmpl_vars[:noi_per_date] = noi_per_day.keys.sort.map do |date|
-        {:date => date, :nodes => noi_per_day[date] }
-      end
+      tmpl_vars[:noi_per_date] = agenda_reporter.open_nodes_grouped_by_day
 
       puts Mustache.render <<-eos.strip_indent(8), tmpl_vars
         Agenda ()

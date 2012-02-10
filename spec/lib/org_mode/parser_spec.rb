@@ -145,11 +145,6 @@ describe OrgMode::FileParser do
   end
 end
 
-describe OrgMode::File do
-  it "holds all the nodes"
-  it "holds all the configuration data"
-end
-
 describe OrgMode::NodeParser do
   context ".parse" do
     context "title" do

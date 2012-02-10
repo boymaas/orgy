@@ -13,25 +13,10 @@
 require "org_mode/version"
 
 module OrgMode
-  class File
-    attr_accessor :header, :nodes, :footer
-    def initialize(header, nodes, footer)
-      @header = header
-      @footer = footer
-      @nodes = nodes
-    end
 
-    def root_nodes
-      @nodes.select(&:root_node?)
-    end
-
-    def scheduled_nodes
-      @nodes.select(&:scheduled?)
-    end
-  end
 
   class Node
-    attr_accessor :title, :content, :stars, :indent, :date, :todo_state
+    attr_accessor :title, :content, :stars, :date, :todo_state
     attr_accessor :parent, :children
 
     def initialize
@@ -39,8 +24,12 @@ module OrgMode
       @children = []
     end
 
+    def indent 
+      stars + 1
+    end 
+
     def root_node?
-      parent.nil?
+      stars == 1
     end
 
     def scheduled?
@@ -49,6 +38,42 @@ module OrgMode
 
     def done?
       todo_state == 'DONE'
+    end
+  end
+
+  module FileInterface
+    def root_nodes
+      nodes.select(&:root_node?)
+    end
+
+    def scheduled_nodes
+      nodes.select(&:scheduled?)
+    end
+  end
+
+  class File
+    attr_accessor :header, :nodes, :footer
+
+    include FileInterface
+
+    def initialize(header, nodes, footer)
+      @header = header
+      @footer = footer
+      @nodes = nodes
+    end
+  end
+
+  class FileCollection
+    attr_accessor :files
+
+    include FileInterface
+
+    def initialize(files)
+      @files = files 
+    end
+
+    def nodes
+      files.map(&:nodes).flatten
     end
   end
 end

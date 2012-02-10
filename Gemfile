@@ -12,7 +12,6 @@ group :test do
   gem "cucumber"
   gem "timecop"
   gem "guard-cucumber"
-  
 end
 
 
