@@ -45,6 +45,22 @@ end
 
 describe OrgMode::FileParser do
   context ".parse_into_tokens" do
+    it "should pars only one" do
+      org_data = <<-org.gsub(/^\s{8}/,'')
+        * First
+      org
+      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
+      b.should be_empty
+      n.should == [["* First", ""]]
+      e.should be_empty
+    end
+    it "should pars only one without enter" do
+      org_data = "* First"
+      b,n,e = OrgMode::FileParser.parse_into_tokens(org_data)
+      b.should be_empty
+      n.should == [["* First", ""]]
+      e.should be_empty
+    end
     it "should divide data up correctly" do
       org_data = <<-org.gsub(/^\s{8}/,'')
         * First

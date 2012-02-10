@@ -22,6 +22,11 @@ module OrgMode
 
     class << self
 
+      # Public: parses buffer into nodes and
+      # collects there in a OrgMode::File object
+      #
+      # Returns OrgMode::File object containing all
+      # information of the file. 
       def parse(buffer)
         b, nodes, e =  parse_buffer(buffer)
 
@@ -61,7 +66,7 @@ module OrgMode
 
         nodes = []
         while !tokens.empty?
-          nodes << Array.new(2) { tokens.shift }
+          nodes << Array.new(2) { tokens.shift || '' }
         end
 
         nodes.map! { |t,c| [t,c[1..-1] || ''] }

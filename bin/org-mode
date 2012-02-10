@@ -4,6 +4,8 @@ require 'rubygems'
 require 'commander/import'
 require 'org_mode/version'
 
+require 'org_mode/commands'
+
 program :version, OrgMode::VERSION
 program :description, 'Formats and extracts information out of org-mode files'
 program :help_formatter, :compact
@@ -14,13 +16,10 @@ command :agenda do |c|
   c.description = ''
   c.example 'description', 'command example'
   c.option '--some-switch', 'Some switch that does something'
-  c.action do |args, options|
-    puts <<-eos.gsub(/^\s{6}/,'')
-      Agenda ()
-        2012-01-01
-          TODO Scheduled task
-    eos
-  end
+  c.when_called OrgMode::Commands::Agenda, :execute
+  # c.action do |args, options|
+  #   # Do something or c.when_called Orgy::Commands::Update
+  # end
 end
 
 command :update do |c|

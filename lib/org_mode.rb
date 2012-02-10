@@ -24,6 +24,10 @@ module OrgMode
     def root_nodes
       @nodes.select(&:root_node?)
     end
+
+    def scheduled_nodes
+      @nodes.select(&:scheduled?)
+    end
   end
 
   class Node
@@ -37,6 +41,14 @@ module OrgMode
 
     def root_node?
       parent.nil?
+    end
+
+    def scheduled?
+      !date.nil?
+    end
+
+    def done?
+      todo_state == 'DONE'
     end
   end
 end

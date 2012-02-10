@@ -37,7 +37,7 @@ end
 def org_mode_script(cmd, *params)
 
   # build command
-  cmd = %[bin/org-mode #{cmd} #{params * ' '}]
+  cmd = %[bin/org-mode --trace #{cmd} #{params * ' '}]
 
   stdout, stderr, status = Open3.capture3(cmd)
 
