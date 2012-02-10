@@ -20,9 +20,9 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
-  s.add_development_dependency "rake"
+  s.add_development_dependency "rake", ["~> 0.9"]
   # s.add_runtime_dependency "rest-client"
-  s.add_runtime_dependency "commander"
-  s.add_runtime_dependency "facets"
-  s.add_runtime_dependency "mustache"
+  s.add_runtime_dependency "commander", ["~> 4.0"]
+  s.add_runtime_dependency "facets", ["~> 2.9"]
+  s.add_runtime_dependency "mustache", ["~> 0.99"]
 end
