@@ -1,6 +1,6 @@
 require 'tempfile'
 require 'ruby-debug'
-require 'open3'
+require 'popen4'
 
 class OrgModeScriptError < StandardError;
   attr_accessor :stdout, :stderr, :status, :cmd
@@ -37,9 +37,13 @@ end
 def org_mode_script(cmd, *params)
 
   # build command
-  cmd = %[bin/org-mode --trace #{cmd} #{params * ' '}]
+  cmd = %[bin/org-mode #{cmd} #{params * ' '}]
 
-  stdout, stderr, status = Open3.capture3(cmd)
+  stdout, stderr = [ nil,nil ]
+  status = POpen4.popen4(cmd) do |pout,perr|
+    stdout = pout.read
+    stderr = perr.read
+  end
 
   unless status.success?
     raise OrgModeScriptError.new(stdout, stderr, status, cmd)

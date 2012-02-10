@@ -32,28 +32,6 @@ describe OrgMode::Commands::Agenda do
               TODO Scheduled task 
         eos
       end
-      it 'ignores unscheduled tasks' do
-        org_file = write_into_tempfile <<-eos.strip_indent(10)
-          * TODO Scheduled task <1-1-2012 Wed 15:15>
-          * TODO UnScheduled task
-        eos
-        execute_and_compare_stdout_with [org_file.path], stub, <<-eos.strip_indent(10)
-          Agenda ()
-            2012-01-01
-              TODO Scheduled task 
-        eos
-      end
-      it 'ignores done tasks' do
-        org_file = write_into_tempfile <<-eos.strip_indent(10)
-          * TODO Scheduled task <1-1-2012 Wed 15:15>
-          * DONE Completed scheduled task <1-1-2012 Wed 15:15>
-        eos
-        execute_and_compare_stdout_with [org_file.path], stub, <<-eos.strip_indent(10)
-          Agenda ()
-            2012-01-01
-              TODO Scheduled task 
-        eos
-      end
     end
     context 'when loaded with two files' do
       it 'displays both in expected format and sorted correctly' do

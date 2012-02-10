@@ -18,7 +18,7 @@ describe OrgMode::Reporters::Agenda do
                                 :todo_state => 'DONE', 
                                 :date => Date.parse('2012-06-01'))
     nodes << OrgMode::Node.make(:stars => 2, :date=>Date.parse('2012-02-03'))
-    nodes << OrgMode::Node.make(:stars => 3, :date=>Date.parse('2012-02-01'))
+    nodes << OrgMode::Node.make(:stars => 3, :date=>DateTime.parse('2012-02-01 15:00'))
     files << OrgMode::File.make(:nodes => nodes)
     OrgMode::FileCollection.make(:files => files)
   end
@@ -48,7 +48,7 @@ describe OrgMode::Reporters::Agenda do
              {:title=>"org-node",
               :content=>"org-node content",
               :todo_state=>"TODO",
-              :date=>"2012-02-01 00:00",
+              :date=>"2012-02-01 15:00",
               :stars=>3}]},
           {:date=>"2012-02-03",
            :nodes=>

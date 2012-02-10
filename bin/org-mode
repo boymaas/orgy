@@ -17,9 +17,6 @@ command :agenda do |c|
   c.example 'description', 'command example'
   c.option '--some-switch', 'Some switch that does something'
   c.when_called OrgMode::Commands::Agenda, :execute
-  # c.action do |args, options|
-  #   # Do something or c.when_called Orgy::Commands::Update
-  # end
 end
 
 command :update do |c|

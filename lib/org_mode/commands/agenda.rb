@@ -32,6 +32,8 @@ module OrgMode::Commands
           {{/noi_per_date}}
       eos
 
+    rescue SystemCallError => e
+      puts "Encountered a little problem: #{e}"
     end
   end
 end
