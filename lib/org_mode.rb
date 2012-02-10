@@ -39,6 +39,7 @@ module OrgMode
     def done?
       todo_state == 'DONE'
     end
+
   end
 
   module FileInterface

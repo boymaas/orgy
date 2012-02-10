@@ -19,9 +19,20 @@ module OrgMode
         noi_per_day = nodes_of_interest.group_by { |noi| noi.date.strftime('%Y-%m-%d') }
        
         noi_per_day.keys.sort.map do |date|
-          {:date => date, :nodes => noi_per_day[date] }
+          { :date => date, :nodes => noi_per_day[date].map { |n| node_to_hash(n) } }
         end
       end
+
+      private
+
+    def node_to_hash(node)
+      rv = {}
+      %w[title content todo_state date stars].each do |k|
+        rv[:"#{k}"] = node.send(:"#{k}") 
+      end
+      rv[:date] = rv[:date].strftime('%Y-%m-%d %H:%M') if rv[:date]
+      rv
+    end
 
     end
   end
