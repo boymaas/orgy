@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem "commander"
+gem "facets"
 gem "mustache"
 
 group :development do
