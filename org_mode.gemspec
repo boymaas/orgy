@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["boy.maas@gmail.com"]
   s.homepage    = "https://github.com/boymaas/orgy"
   s.summary     = %q{Parses and does all kinds of tricks with org-mode files}
-  s.description = %q{Org-mode parser, presenters, and reformatters}
+  s.description = %q{Org-mode parser, presenter, and reformatter. Read more about it on the github pages.}
 
   s.rubyforge_project = "org_mode"
 
