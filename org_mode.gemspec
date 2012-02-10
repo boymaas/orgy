@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = OrgMode::VERSION
   s.authors     = ["Boy Maas"]
   s.email       = ["boy.maas@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/boymaas/orgy"
+  s.summary     = %q{Parses and does all kinds of tricks with org-mode files}
+  s.description = %q{Org-mode parser, presenters, and reformatters}
 
   s.rubyforge_project = "org_mode"
 
@@ -20,5 +20,9 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
+  s.add_development_dependency "rake"
   # s.add_runtime_dependency "rest-client"
+  s.add_runtime_dependency "commander"
+  s.add_runtime_dependency "facets"
+  s.add_runtime_dependency "mustache"
 end

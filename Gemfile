@@ -1,5 +1,8 @@
 source "http://rubygems.org"
 
+# Specify your gem's dependencies in org_mode.gemspec
+gemspec
+
 gem "commander"
 gem "facets"
 gem "mustache"
@@ -21,5 +24,3 @@ group :test do
 end
 
 
-# Specify your gem's dependencies in org_mode.gemspec
-gemspec
