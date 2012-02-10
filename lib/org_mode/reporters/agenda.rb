@@ -14,7 +14,7 @@ module OrgMode
         # Get all nodes from all files
         # extract scheduled items which are not done
         nodes_of_interest = file_collection.scheduled_nodes
-        nodes_of_interest.reject!(&:done?)
+        nodes_of_interest.select!(&:open?)
 
         noi_per_day = nodes_of_interest.group_by { |noi| noi.date.strftime('%Y-%m-%d') }
        

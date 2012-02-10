@@ -1,14 +1,9 @@
 require 'org_mode'
 
 class OrgMode::Node
-  def self.sn
-    @sn ||= 0 
-    @sn += 1
-  end
-
   def self.make(attrs={})
     self.new.tap do |n|
-      n.title = attrs[:title] || "org-node #{sn}"
+      n.title = attrs[:title] || "org-node"
       n.stars = attrs[:stars] || rand(4)
       n.content = attrs[:content] || "org-node content"
       n.date = attrs[:date]

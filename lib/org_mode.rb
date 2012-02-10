@@ -36,6 +36,10 @@ module OrgMode
       !date.nil?
     end
 
+    def open?
+      not done?
+    end
+
     def done?
       todo_state == 'DONE'
     end
