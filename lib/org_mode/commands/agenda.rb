@@ -1,7 +1,7 @@
 require 'org_mode/parser'
 require 'org_mode/loader'
 require 'org_mode/reporters/agenda'
-require 'org_mode/presenters/string'
+require 'org_mode/presenters/textual'
 
 require 'core_ext/string'
 
