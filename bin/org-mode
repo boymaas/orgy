@@ -11,22 +11,20 @@ program :description, 'Formats and extracts information out of org-mode files'
 program :help_formatter, :compact
 
 command :agenda do |c|
-  c.syntax = 'org-mode agenda [options]'
-  c.summary = ''
-  c.description = ''
-  c.example 'description', 'command example'
-  c.option '--some-switch', 'Some switch that does something'
+  c.syntax = 'org-mode agenda [options] *org-mode-files'
+  c.summary = 'Displays information on scheduled items'
+  c.description = nil
+  c.example 'extract information on scheduled items out of files', 'org-mode agenda an-org-file.org'
+  c.option '--no-color', 'Do not use color in output'
   c.when_called OrgMode::Commands::Agenda, :execute
 end
 
 command :update do |c|
-  c.syntax = 'Orgy update [options]'
-  c.summary = ''
-  c.description = ''
+  c.syntax = 'org-mode update [options]'
+  c.summary = 'Reformats an org-file'
+  c.description = 'Reformat and update the org-file. Converting the org-file to a standard format'
   c.example 'description', 'command example'
-  c.option '--some-switch', 'Some switch that does something'
-  c.action do |args, options|
-    # Do something or c.when_called Orgy::Commands::Update
-  end
+  c.option '--archive-done-items', 'Archives done items'
+  c.when_called OrgMode::Commands::Update, :execute
 end
 

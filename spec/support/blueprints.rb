@@ -7,6 +7,8 @@ class OrgMode::Node
       n.stars = attrs[:stars] || rand(4)
       n.content = attrs[:content] || "org-node content"
       n.date = attrs[:date]
+      n.date_start_time = attrs[:date_start_time]
+      n.date_end_time = attrs[:date_end_time]
       n.todo_state = attrs[:todo_state] || 'TODO'
     end
   end
