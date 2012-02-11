@@ -111,10 +111,9 @@ module OrgMode
           _, extracted_date, start_time, end_time = node.title.match(RxDateRegexp).to_a
           node.title = node.title.gsub(RxDateRegexp, '') 
 
-          if extracted_date
-            node.date_start_time = DateTime.parse("#{extracted_date} #{start_time}")
-            node.date_end_time = DateTime.parse("#{extracted_date} #{end_time}")
-          end
+          node.date = DateTime.parse(extracted_date) if extracted_date
+          node.date_start_time = DateTime.parse("#{extracted_date} #{start_time}") if start_time
+          node.date_end_time = DateTime.parse("#{extracted_date} #{end_time}") if end_time
         end
 
       RxEmptyLine = /^\s*$/

@@ -27,9 +27,9 @@ describe OrgMode::Commands::Agenda do
           * TODO Scheduled task <1-1-2012 Wed 15:15>
         eos
         execute_and_compare_stdout_with [org_file.path], stub, <<-eos.strip_indent(10)
-          Agenda ()
+          Agenda: open items grouped by day
             2012-01-01
-              TODO Scheduled task 
+              15:15       TODO Scheduled task 
         eos
       end
     end
@@ -43,11 +43,11 @@ describe OrgMode::Commands::Agenda do
         eos
         execute_and_compare_stdout_with [org_file, org_file2].map(&:path), stub, 
           <<-eos.strip_indent(10)
-          Agenda ()
+          Agenda: open items grouped by day
             2012-01-01
-              TODO Scheduled task on the 1th 
+              15:15       TODO Scheduled task on the 1th 
             2012-01-05
-              TODO Scheduled task on the 5th 
+              15:15       TODO Scheduled task on the 5th 
         eos
       end
     end

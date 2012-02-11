@@ -16,16 +16,13 @@ module OrgMode
 
 
   class Node
-    attr_accessor :title, :content, :stars, :date_start_time, :date_end_time, :todo_state
+    attr_accessor :title, :content, :stars, :date, :date_start_time, :date_end_time, :todo_state
     attr_accessor :parent, :children
 
     def initialize
       @parent = nil
       @children = []
     end
-
-    alias :date :date_start_time
-    alias :date= :date_start_time=
 
     def indent 
       stars + 1
@@ -37,6 +34,10 @@ module OrgMode
 
     def scheduled?
       !date.nil?
+    end
+
+    def appointment?
+      !!( date_start_time || date_end_time )
     end
 
     def open?

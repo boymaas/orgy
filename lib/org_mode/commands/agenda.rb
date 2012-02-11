@@ -18,10 +18,10 @@ module OrgMode::Commands
 
       file_collection = OrgMode::Loader.load_and_parse_files(*args)
       agenda_reporter = OrgMode::Reporters::Agenda.new(file_collection)
-      text_presenter =  OrgMode::Presenters::Agenda::Textual.new(agenda_reporter)
+      text_presenter  = OrgMode::Presenters::Agenda::Textual.new(agenda_reporter)
 
-      puts "Agenda ()"
-      puts text_presenter.by_date
+      puts "Agenda: open items grouped by day"
+      puts text_presenter.open_items_per_day
 
     rescue SystemCallError => e
       puts "Encountered a little problem: #{e}"

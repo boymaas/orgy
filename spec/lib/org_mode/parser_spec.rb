@@ -180,14 +180,20 @@ describe OrgMode::NodeParser do
       end
       context "node title with date time" do
         let(:node) {OrgMode::NodeParser.parse('** Date node title <2012-02-03 Wed 15:15>', nil)}
-        it "parses the date-time from the title correcty" do
-          node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
+        it "parses the date from the title correcty" do
+          node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 00:00'
+        end
+        it "parses the date_start_time from the title correcty" do
+          node.date_start_time.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
+        end
+        it "parses the date_end_time from the title correcty" do
+          node.date_end_time.should be_nil
         end
       end
       context "node title with date-range" do
         let(:node) {OrgMode::NodeParser.parse('** Date node title <2012-02-03 Wed 15:15-16:15>', nil)}
         it "parses the date from the title correcty" do
-          node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'
+          node.date.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 00:00'
         end
         it "parses the start_tiem correctly" do
           node.date_start_time.strftime('%Y-%m-%d %H:%M').should == '2012-02-03 15:15'

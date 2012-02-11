@@ -32,10 +32,12 @@ module OrgMode
       private
 
     def node_to_hash(node)
-      rv = [:title, :content, :todo_state, :date, :stars].
+      rv = [:title, :content, :todo_state, :date, :date_start_time, :date_end_time, :stars, :appointment?].
         map { |k| [ k, node.send(k) ] }.to_h
 
       rv[:date] = rv[:date].strftime('%Y-%m-%d %H:%M') if rv[:date]
+      rv[:date_start_time] = rv[:date_start_time].strftime('%H:%M') if rv[:date_start_time]
+      rv[:date_end_time] = rv[:date_end_time].strftime('%H:%M') if rv[:date_end_time]
       rv
     end
 
