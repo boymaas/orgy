@@ -40,6 +40,7 @@ module OrgMode
       rv[:date] = rv[:date].strftime('%Y-%m-%d %H:%M') if rv[:date]
       rv[:date_start_time] = rv[:date_start_time].strftime('%H:%M') if rv[:date_start_time]
       rv[:date_end_time] = rv[:date_end_time].strftime('%H:%M') if rv[:date_end_time]
+      rv[:node] = node
       rv.to_ostruct
     end
 
