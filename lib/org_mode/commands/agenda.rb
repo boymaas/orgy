@@ -1,9 +1,9 @@
 require 'org_mode/parser'
 require 'org_mode/loader'
 require 'org_mode/reporters/agenda'
+require 'org_mode/presenters/string'
 
 require 'core_ext/string'
-require 'mustache'
 
 module OrgMode::Commands
   class Agenda
@@ -18,19 +18,10 @@ module OrgMode::Commands
 
       file_collection = OrgMode::Loader.load_and_parse_files(*args)
       agenda_reporter = OrgMode::Reporters::Agenda.new(file_collection)
+      text_presenter =  OrgMode::Presenters::Agenda::Textual.new(agenda_reporter)
 
-      tmpl_vars = {}
-      tmpl_vars[:noi_per_date] = agenda_reporter.open_nodes_grouped_by_day
-
-      puts Mustache.render <<-eos.strip_indent(8), tmpl_vars
-        Agenda ()
-        {{#noi_per_date}}
-          {{date}}
-          {{#nodes}}
-            {{todo_state}}{{title}}
-          {{/nodes}}
-          {{/noi_per_date}}
-      eos
+      puts "Agenda ()"
+      puts text_presenter.by_date
 
     rescue SystemCallError => e
       puts "Encountered a little problem: #{e}"
