@@ -6,6 +6,7 @@ gemspec
 gem "commander"
 gem "facets"
 gem "mustache"
+gem "colorize"
 
 group :development do
   if RUBY_VERSION =~ /^1\.9/

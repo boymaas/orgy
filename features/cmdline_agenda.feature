@@ -11,12 +11,11 @@ Feature: agenda
       """
     When the script is executed on the org-file
     When the script is called with "agenda"
-    Then the output should be
-      """
-      Agenda ()
-        2012-01-01
-          TODO Scheduled task 
-      """
+    Then the output should contain "Agenda"
+    And the output should contain "2012-01-01"
+    And the output should contain "15:15"
+    And the output should contain "TODO"
+    And the output should contain "Scheduled task"
 
   # @focus
   # Scenario: should limit restults in a day view

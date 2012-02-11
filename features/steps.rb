@@ -30,6 +30,10 @@ end
 Then /^the output should be$/ do |string|
   @stdout.should == string
 end
+Then /^the output should contain "([^""]*)"$/ do |pattern|
+  @stdout.should match(pattern)
+end
+
 Then /^the error should be$/ do |string|
   @script_error.stderr.chomp.should == string
 end

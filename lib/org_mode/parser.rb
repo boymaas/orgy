@@ -110,6 +110,7 @@ module OrgMode
         def parse_extract_dates(node)
           _, extracted_date, start_time, end_time = node.title.match(RxDateRegexp).to_a
           node.title = node.title.gsub(RxDateRegexp, '') 
+          node.title.strip!
 
           node.date = DateTime.parse(extracted_date) if extracted_date
           node.date_start_time = DateTime.parse("#{extracted_date} #{start_time}") if start_time

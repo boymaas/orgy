@@ -1,4 +1,5 @@
 require 'facets/to_hash'
+require 'facets/ostruct'
 
 module OrgMode
   module Reporters
@@ -26,7 +27,8 @@ module OrgMode
         # build a nice orderd struct
         noi_per_day.keys.sort.map do |date|
           { :date => date, :nodes => noi_per_day[date].map { |n| node_to_hash(n) } }
-        end
+        end.map(&:to_ostruct)
+
       end
 
       private
@@ -38,7 +40,7 @@ module OrgMode
       rv[:date] = rv[:date].strftime('%Y-%m-%d %H:%M') if rv[:date]
       rv[:date_start_time] = rv[:date_start_time].strftime('%H:%M') if rv[:date_start_time]
       rv[:date_end_time] = rv[:date_end_time].strftime('%H:%M') if rv[:date_end_time]
-      rv
+      rv.to_ostruct
     end
 
     end
