@@ -31,15 +31,12 @@ describe OrgMode::Formatters::Textual do
       @output.should == <<-eos.gsub(/^ {1,8}/,'').chomp
         aheader
         
-        * <2012-06-01 Fri> DONE org-node
+        * DONE <2012-06-01 Fri> org-node
+          org-node content
+        ** TODO <2012-02-03 Fri> org-node
            org-node content
-        
-        ** <2012-02-03 Fri> TODO org-node
+        *** TODO <2012-02-01 Wed 15:00-16:00> org-node
             org-node content
-        
-        *** <2012-02-01 Wed 15:00-16:00> TODO org-node
-             org-node content
-        
         
         afooter
       eos
