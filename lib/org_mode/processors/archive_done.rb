@@ -4,7 +4,7 @@ require 'delegate'
 
 module OrgMode
   module Processors
-    class ArchiveEnhancedOrgFile < SimpleDelegator
+    class ArchiveDoneOrgFile < SimpleDelegator
       def initialize(org_file)
         super(org_file)
       end
@@ -14,7 +14,7 @@ module OrgMode
       end
 
       def create_archived_root_node
-        self.nodes << OrgMode::Node.new.tap do |n|
+        self.root_nodes << OrgMode::Node.new.tap do |n|
           n.title = "Archived"
           n.content = <<-eos.strip_indent(10)
           This node contains archived items. Appended
@@ -35,12 +35,34 @@ module OrgMode
 
     class ArchiveDone
       def initialize(org_file)
-        @org_file = ArchiveEnhancedOrgFile.new(org_file)
+        @org_file = ArchiveDoneOrgFile.new(org_file)
       end
 
       def process
         @org_file.create_archived_root_node unless @org_file.archived_root_node
+
+        to_be_archived_trees = []
+        walk_and_update_node_children @org_file do |children|
+          to_be_archived_trees << children.select(&:done?)
+          children.reject(&:done?)
+        end
+
+        @org_file.archived_root_node.children.concat(  to_be_archived_trees.flatten )
+
         @org_file
+      end
+
+      # Private: walks all nodes
+      # but updates children array with
+      # return value of called function.
+      #
+      # Can be used to extract nodes from
+      # tree
+      def walk_and_update_node_children(node, &block)
+        node.children = block.call(node.children)
+        node.children.map do |n|
+          walk_and_update_node_children(n, &block) 
+        end
       end
     end
   end

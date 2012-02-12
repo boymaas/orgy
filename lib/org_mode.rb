@@ -50,12 +50,16 @@ module OrgMode
   end
 
   module FileInterface
-    def root_nodes
-      nodes.select(&:root_node?)
-    end
-
     def scheduled_nodes
       nodes.select(&:scheduled?)
+    end
+
+    def select_by_title(pattern, props={})
+      result = nodes
+      props.each do |k,v|
+        result = result.select {|n| n.send(k) == v } 
+      end
+      result.select {|n| n.title =~ pattern}
     end
   end
 
@@ -63,6 +67,11 @@ module OrgMode
     attr_accessor :header, :root_nodes, :footer
 
     include FileInterface
+
+    # For universial children accessor
+    # file is just a node
+    alias :children :root_nodes
+    alias :children= :root_nodes=
 
     def initialize(header, root_nodes, footer)
       @header = header
@@ -97,5 +106,10 @@ module OrgMode
     def nodes
       files.map(&:nodes).flatten
     end
+
+    def root_nodes
+      nodes.select(&:root_node?)
+    end
+
   end
 end
