@@ -7,6 +7,7 @@
 # Parser is decoupled from object model to make it easy to write updated
 # parsers or use a database to serialize an org-mode file out of.
 require 'org_mode'
+require 'org_mode/node_utils'
 require 'date'
 
 module OrgMode
@@ -29,18 +30,18 @@ module OrgMode
       # Returns OrgMode::File object containing all
       # information of the file. 
       def parse(buffer)
-        b, nodes, e =  parse_buffer(buffer)
+        b, nodes, e  = parse_buffer(buffer)
 
-        parent_stack = []
-        nodes.map! do |title, content| 
-          node = NodeParser.parse(title,content) 
-          node.parent = parent_stack[node.stars - 1]
-          if node.parent
-            node.parent.children << node
-          end
-          parent_stack[node.stars] = node
+        parsed_nodes = parse_nodes(nodes)
+        root_nodes   = NodeUtils.convert_sequential_nodelist_into_tree(parsed_nodes)
+
+        return File.new(b,root_nodes,e)
+      end
+
+      def parse_nodes(nodes)
+        nodes.map do |title,content|
+          NodeParser.parse(title,content) 
         end
-        return File.new(b,nodes,e)
       end
 
       def parse_buffer(buffer)

@@ -1,4 +1,5 @@
 require 'org_mode'
+require 'org_mode/node_utils'
 
 class OrgMode::Node
   def self.make(attrs={})
@@ -17,7 +18,8 @@ end
 class OrgMode::File
   def self.make(attrs={})
     nodes = attrs[:nodes] || Array.new(2) { OrgMode::Node.make }
-    self.new("aheader", nodes , "afooter")
+    root_nodes = OrgMode::NodeUtils.convert_sequential_nodelist_into_tree(nodes)
+    self.new("aheader", root_nodes , "afooter")
   end
 end
 
