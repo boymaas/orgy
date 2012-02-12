@@ -1,4 +1,5 @@
 require 'org_mode'
+require 'org_mode/node_utils'
 require 'support/blueprints'
 
 describe OrgMode::File do

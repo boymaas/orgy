@@ -22,6 +22,7 @@ group :test do
   gem "timecop"
   gem "guard-cucumber"
   gem "popen4"
+  gem "pry"
 end
 
 
