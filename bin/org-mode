@@ -24,7 +24,7 @@ command :update do |c|
   c.summary = 'Reformats an org-file'
   c.description = 'Reformat and update the org-file. Converting the org-file to a standard format'
   c.example 'description', 'command example'
-  c.option '--archive-done-items', 'Archives done items'
+  c.option '--archive-done', 'Archives done items'
   c.when_called OrgMode::Commands::Update, :execute
 end
 
