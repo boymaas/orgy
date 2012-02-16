@@ -18,9 +18,9 @@ module OrgMode::Commands
 
       file_collection = OrgMode::Loader.load_and_parse_files(*args)
       agenda_reporter = OrgMode::Reporters::Agenda.new(file_collection)
-      text_presenter  = OrgMode::Presenters::Agenda::Console.new(agenda_reporter)
+      console_presenter  = OrgMode::Presenters::Agenda::Console.new(agenda_reporter)
 
-      puts text_presenter.open_items_per_day_colorized
+      puts console_presenter.open_items_per_day_colorized
 
     rescue SystemCallError => e
       puts "Encountered a little problem: #{e}"
