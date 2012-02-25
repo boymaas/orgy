@@ -58,13 +58,18 @@ describe OrgMode::DefaultConfiguration do
   end
 
   it "writes the content if asked for" do
-    default_config.stub(:content => 'test-content')
-    open_file = stub(:open_file)
-    File.should_receive(:open).
-      and_return(open_file)
-    open_file.should_receive(:write).
-      with('test-content')
+    %x[rm -r spec/tmp]
+    %x[mkdir spec/tmp]
+    target_path = 'spec/tmp/orgmoderc'
 
-    default_config.write_to('/tmp/filename-dont-matter')
+    default_config.write_to(target_path)
+
+    File.exist?('spec/tmp/.orgmode').should be_true
+    File.exist?('spec/tmp/.orgmode/gtd.org').should be_true
+    File.exist?('spec/tmp/orgmoderc').should be_true
+
+    File.open('spec/tmp/.orgmode/gtd.org').read.should == 
+      OrgMode::DefaultOrgfile.
+        content(:target_path => 'spec/tmp/orgmoderc')
   end
 end

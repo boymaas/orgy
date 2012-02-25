@@ -5,3 +5,4 @@ pkg/*
 .*.sw?
 .rvmrc
 tags
+tmp

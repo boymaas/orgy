@@ -1,6 +1,7 @@
 require 'tempfile'
 require 'ruby-debug'
 require 'popen4'
+require 'facets/kernel/blank'
 
 class OrgModeScriptError < StandardError;
   attr_accessor :stdout, :stderr, :status, :cmd
@@ -37,7 +38,8 @@ end
 def org_mode_script(cmd, *params)
 
   # build command
-  cmd = %[bin/org-mode #{cmd} #{params * ' '}]
+  cmd = %[#{org_mode_env} bin/org-mode #{cmd} #{params * ' '}]
+  puts cmd
 
   stdout, stderr = [ nil,nil ]
   status = POpen4.popen4(cmd) do |pout,perr|
@@ -50,4 +52,8 @@ def org_mode_script(cmd, *params)
   end
 
   return [stdout.chomp, stderr, status]
+end
+
+def org_mode_env
+  ['ORG_MODE_RC_DIR', 'ORG_MODE_RC_FNAME'].reject(&:blank?).map {|e| "#{e}='#{ENV[e]}'"} * ' '
 end

@@ -19,6 +19,18 @@ When /^the script is called with "([^"]*)"( should fail)?$/ do |argv, should_fai
   end
 end
 
+Given /^we have an environment containing:$/ do |table|
+  # table is a Cucumber::Ast::Table
+  table.raw.each do |k,v|
+    ENV[k] = v
+  end
+end
+
+Given /^I have an empty tmp dir 'features\/tmp'$/ do
+  %x[rm -r features/tmp] 
+  %x[mkdir features/tmp] 
+end
+
 Given /^date is "([^"]*)"$/ do |date_string|
   Timecop.freeze(Date.parse(date_string))
 end
@@ -32,6 +44,9 @@ Then /^the output should be$/ do |string|
 end
 Then /^the output should contain "([^""]*)"$/ do |pattern|
   @stdout.should match(pattern)
+end
+Then /^the output should not contain "([^""]*)"$/ do |pattern|
+  @stdout.should_not match(pattern)
 end
 
 Then /^the error should be$/ do |string|

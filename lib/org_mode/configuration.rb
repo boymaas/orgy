@@ -1,10 +1,36 @@
 require 'pathname'
 require 'configuration'
+require 'core_ext/string'
+require 'date'
 
 module OrgMode
+  class DefaultOrgfile
+    def self.content(tmpl_vars={})
+      return <<-EOF.strip_indent(8)
+       This is your default orgmode agenda file, the orgmode script
+       finds this file since it's configured in #{tmpl_vars.fetch(:target_path)}
+
+       * TODO Configure orgmoderc file in #{tmpl_vars.fetch(:target_path)} <#{DateTime.now.strftime('%Y-%m-%d %a')}>
+       EOF
+    end
+  end
+
   class DefaultConfiguration
+    attr_reader :file
+
     def write_to(target_path)
-      ::File.open(target_path, 'w+').write(content)
+      @file ||= ::File.open(target_path, 'w+')
+      @file.write(content)
+      @file.flush
+
+      dirname = ::File.dirname(target_path)
+      config_dir = "#{dirname}/.orgmode"
+      %x[mkdir #{config_dir}]
+
+      default_org_file = ::File.open("#{config_dir}/gtd.org", 'w+')
+      default_org_file.write(
+        DefaultOrgfile.content(:target_path => target_path))
+      default_org_file.flush
     end
 
     def self.write_to(target_path)
@@ -58,7 +84,7 @@ module OrgMode
       contents = ::File.open(path).read
       instance_eval <<-RUBY, path, 0
         ::Configuration.for('org-mode') do
-          #{contents}
+      #{contents}
         end
       RUBY
 
@@ -74,9 +100,11 @@ module OrgMode
 
     # Creates a minimal example configuration
     #
-    # Returns nothing
-    def self.create_default_config
-      DefaultConfiguration.write_to(Configuration.new.path)
+    # Returns the default config
+    def self.create_default_config(base_dir=nil,file_name=nil)
+      new_config = Configuration.new(base_dir,file_name)
+      DefaultConfiguration.write_to( new_config.path )
+      return new_config.read_and_evaluate
     end
   end
 end
