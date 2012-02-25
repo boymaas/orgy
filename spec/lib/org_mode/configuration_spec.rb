@@ -47,16 +47,6 @@ end
 describe OrgMode::DefaultConfiguration do
   let (:default_config) { OrgMode::DefaultConfiguration.new }
     
-  it "determines correct path" do
-    default_config.send(:path).to_s.
-      should match(%r[org_mode/configuration/defaultrc\.rb$]) 
-  end
-
-  it "loads correct content" do
-    default_config.send(:content).
-      should match(/Daniel San/)
-  end
-
   it "writes the content if asked for" do
     %x[rm -r spec/tmp]
     %x[mkdir spec/tmp]

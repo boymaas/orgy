@@ -4,53 +4,67 @@ require 'core_ext/string'
 require 'date'
 
 module OrgMode
-  class DefaultOrgfile
-    def self.content(tmpl_vars={})
-      return <<-EOF.strip_indent(8)
-       This is your default orgmode agenda file, the orgmode script
-       finds this file since it's configured in #{tmpl_vars.fetch(:target_path)}
+  module FileOperations
+    def spit_into_file(path, content)
+      f = ::File.open(path, 'w+')
+      f.write(content)
+      f.flush
+      f.close
+    end
+  end
 
-       * TODO Configure orgmoderc file in #{tmpl_vars.fetch(:target_path)} <#{DateTime.now.strftime('%Y-%m-%d %a')}>
+  class DefaultOrgfile
+    extend FileOperations
+
+    class << self
+      def content(tmpl_vars={})
+        return <<-EOF.strip_indent(10)
+         This is your default orgmode agenda file, the orgmode script
+         finds this file since it's configured in #{tmpl_vars.fetch(:target_path)}
+
+         * TODO Configure orgmoderc file in #{tmpl_vars.fetch(:target_path)} <#{DateTime.now.strftime('%Y-%m-%d %a')}>
        EOF
+      end
+
+      def write_to(path, tmpl_vars={})
+        spit_into_file(path, content(tmpl_vars))
+      end
+    end
+  end
+
+  class DefaultRcFile
+    extend FileOperations
+
+    class << self
+      def content
+        @content ||= ::File.open(default_rc_path).read
+      end
+
+      def write_to(target_path)
+        spit_into_file(target_path, content)
+      end
+
+      private
+
+      def default_rc_path 
+        ::File.dirname(__FILE__) + '/configuration/defaultrc.rb'
+      end
     end
   end
 
   class DefaultConfiguration
-    attr_reader :file
 
     def write_to(target_path)
-      @file ||= ::File.open(target_path, 'w+')
-      @file.write(content)
-      @file.flush
-
       dirname = ::File.dirname(target_path)
       config_dir = "#{dirname}/.orgmode"
       %x[mkdir #{config_dir}]
 
-      default_org_file = ::File.open("#{config_dir}/gtd.org", 'w+')
-      default_org_file.write(
-        DefaultOrgfile.content(:target_path => target_path))
-      default_org_file.flush
+      DefaultOrgfile.write_to("#{config_dir}/gtd.org", :target_path=>target_path)
+      DefaultRcFile.write_to(target_path)
     end
 
     def self.write_to(target_path)
       new.write_to(target_path)
-    end
-
-    private 
-
-    def path 
-      unless @path
-        @path = 
-          ::File.dirname(__FILE__) + '/configuration/defaultrc.rb'
-        @path = Pathname.new(@path)
-      end
-
-      @path
-    end
-
-    def content
-      @content ||= ::File.open(path).read
     end
   end
 
