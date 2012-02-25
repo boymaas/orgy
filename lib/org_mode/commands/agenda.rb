@@ -16,7 +16,12 @@ module OrgMode::Commands
     # Returns the restult to stdout
     def execute(args, options)
 
-      file_collection = OrgMode::Loader.load_and_parse_files(*args)
+      files_to_parse = args
+      if files_to_parse.empty?
+        files_to_parse = $config.org_mode_files
+      end
+
+      file_collection = OrgMode::Loader.load_and_parse_files(files_to_parse)
       agenda_reporter = OrgMode::Reporters::Agenda.new(file_collection)
       console_presenter  = OrgMode::Presenters::Agenda::Console.new(agenda_reporter)
 

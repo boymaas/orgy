@@ -1,18 +1,37 @@
 # Org-Mode file parser and writer
 
-Usin Vim for a long time, and having used e-macs for a while I got hooked on
-org-mode.  The flexible plain-tekst planning mode.
+One of the killer features of emacs was org-mode. A real eye
+opener what text-based to-do lists can do for you.
 
-Using org-mode was an eye-opener, brilliant idea but it turns out I am more of a VIM
-person.
-
-So this ruby-gem is result of this personal org-mode dissonance.
+This ruby-gem carries within all you need to work efficiently with a set of
+org-mode files.
 
 ## Goal
 
 Making lightweight/fast ruby org-mode executable to parse/reformat/analyse and
 report on my org-files or the one in my buffer. And following the Unix philosopy
 making a seperate process of it.
+
+# Usage
+
+A shell script is carried along.
+
+    org-mode <org-file>
+
+## Agenda
+
+Displays scheduled items. Parses all the files configured in `.org-moderc`
+
+## Update
+
+    org-mode update <org-file>
+
+parses and updates an org file. It does the following:
+
+* archive done items
+* reformats/re-indents the complete file
+* assigns a sha-1 of the title-content for further updates and
+  quick reference
 
 ## What I want
 

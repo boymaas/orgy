@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby -Ilib
 
 require 'rubygems'
-require 'commander/import'
 require 'org_mode/version'
 
+require 'org_mode/load_or_setup_default_configuration'
+
+require 'commander/import'
 require 'org_mode/commands'
 
 program :version, OrgMode::VERSION

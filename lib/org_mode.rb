@@ -13,7 +13,6 @@
 require "org_mode/version"
 
 module OrgMode
-
   class Node
     attr_accessor :title, :content, :stars, :date, :date_start_time, :date_end_time, :todo_state
     attr_accessor :parent, :children
@@ -46,7 +45,6 @@ module OrgMode
     def done?
       todo_state == 'DONE'
     end
-
   end
 
   module FileInterface
@@ -68,8 +66,9 @@ module OrgMode
 
     include FileInterface
 
-    # For universial children accessor
-    # file is just a node
+    # For universial acces
+    # on file level, the root_nodes
+    # are the nodes children
     alias :children :root_nodes
     alias :children= :root_nodes=
 
@@ -110,6 +109,5 @@ module OrgMode
     def root_nodes
       nodes.select(&:root_node?)
     end
-
   end
 end
