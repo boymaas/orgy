@@ -23,6 +23,13 @@ describe OrgMode::Configuration do
         spec/configuration/example-org-file-01.org
       }
     end
+
+    it "should be accessible through the class" do
+      OrgMode::Configuration.org_mode_files.should == %W{
+        spec/configuration/example-org-file-00.org
+        spec/configuration/example-org-file-01.org
+      }
+    end
   end
   context "wrong configuration present" do
     let (:config)  {

@@ -4,6 +4,7 @@ Feature: org-mode update <orgfile>
   standarized way. This also enables certain
   filters to be applied.
 
+  @focus
   Scenario: should present meaningfull agenda information
     Given we have an org-file with the following content
       """
@@ -15,7 +16,7 @@ Feature: org-mode update <orgfile>
       some other content that will be indented
       """
     When the script is called with "update"
-    Then the output should be
+    Then the orgfile should be rewritten as
       """
       a header
       

@@ -75,9 +75,29 @@ module OrgMode
     class NonExistant < Error; end
 
     ## Class method caller
-    def self.load(base_dir=nil, file_name=nil)
-      self.new(base_dir,file_name).read_and_evaluate
+    class << self
+      def load(base_dir=nil, file_name=nil)
+        @singleton = new(base_dir,file_name)
+        @config = @singleton.read_and_evaluate
+      end
+
+      def path
+        @singleton.path
+      end
+
+      def backup_dir
+        @singleton.base_dir + '.orgmode/backups'
+      end
+
+      # forward all to our singleton
+      def method_missing(f,*a)
+        if @config.respond_to?(f)
+          return @config.send(f, *a) 
+        end
+        super
+      end
     end
+
 
     # Instance
     attr_reader :file_name, :base_dir, :path
@@ -88,7 +108,6 @@ module OrgMode
       @file_name = Pathname.new(a_file_name || '.orgmoderc')
       @path = @base_dir + @file_name
     end
-
 
     # Reads a config file and avaluates
     # it.

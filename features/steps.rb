@@ -19,6 +19,10 @@ When /^the script is called with "([^"]*)"( should fail)?$/ do |argv, should_fai
   end
 end
 
+Then /^the orgfile should be rewritten as$/ do |string|
+  File.open( @org_file.path ).read.should == string
+end
+
 Given /^we have an environment containing:$/ do |table|
   # table is a Cucumber::Ast::Table
   table.raw.each do |k,v|
