@@ -30,3 +30,10 @@ command :update do |c|
   c.when_called OrgMode::Commands::Update, :execute
 end
 
+command :open do |c|
+  c.syntax = 'org-mode open'
+  c.summary = 'open all org-files'
+  c.description = 'Opens configured org-files in a vim session'
+  c.example 'description', 'command example'
+  c.when_called OrgMode::Commands::Open, :execute
+end
