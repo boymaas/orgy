@@ -26,4 +26,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "facets", ["~> 2.9"]
   s.add_runtime_dependency "mustache", ["~> 0.99"]
   s.add_runtime_dependency "colorize", ["~> 0.5"]
+  s.add_runtime_dependency "configuration", ["~> 1.3"]
 end
