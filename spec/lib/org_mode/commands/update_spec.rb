@@ -1,17 +1,29 @@
 require 'org_mode/commands/update'
 require 'lib/org_mode/commands/helpers'
 
+# Fake out functionality
+# not needed
+module OrgMode::FileTools
+  def spit_into_file(buffer, file)
+    puts buffer
+  end
+end
+
 describe OrgMode::Commands::Update do
   before do
     @cmd = OrgMode::Commands::Update.new
   end
 
   context '#execute' do
+    before do
+      OrgMode::FileTools.should_receive(:backup).and_return(true)
+    end
     context 'without options' do
       it 'reformats a file correctly' do
         org_file = write_into_tempfile <<-eos.strip_indent(10)
           * TODO Scheduled task <1-1-2012 Wed 15:15>
         eos
+
         execute_and_compare_stdout_with @cmd, [org_file.path], stub(:archive_done => false), <<-eos.strip_indent(10)
           * TODO <2012-01-01 Sun 15:15> Scheduled task
         eos
