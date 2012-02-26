@@ -9,13 +9,14 @@ gem "mustache"
 gem "colorize"
 gem "configuration"
 
-# group :development do
+group :development do
 #   if RUBY_VERSION =~ /^1\.9/
 #     gem "ruby-debug19"
 #   else
 #     gem "ruby-debug"
 #   end
-# end
+  gem "pry"
+end
 
 group :test do
   gem "rspec", "~> 2.8.0"
@@ -23,7 +24,7 @@ group :test do
   gem "timecop"
   gem "guard-cucumber"
   gem "popen4"
-  gem "pry"
+  gem "rake"
 end
 
 

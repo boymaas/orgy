@@ -1,3 +1,8 @@
 language: ruby
+before_install:
+  - gem install bundler --pre
 rvm:
   - 1.8.7
+notifications:
+  email:
+    - boy.maas@gmail.com

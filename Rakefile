@@ -4,7 +4,10 @@ require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 
 desc 'Default: run specs'
-task :default => [ :spec, :cucumber ]
+
+# XXX: enable cucumber to run also in default test-suite.
+# Travis cannot find ruby when executing `bin/org-mode`
+task :default => :spec
 
 desc "Run specs"
 RSpec::Core::RakeTask.new
