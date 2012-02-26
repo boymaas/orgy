@@ -1,5 +1,4 @@
 require 'tempfile'
-require 'ruby-debug'
 require 'popen4'
 require 'facets/kernel/blank'
 
