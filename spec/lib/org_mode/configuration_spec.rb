@@ -1,4 +1,4 @@
-require 'lib/org_mode/configuration'
+require 'org_mode/configuration'
 
 describe OrgMode::Configuration do
   context "no configuration present" do

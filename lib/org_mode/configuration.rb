@@ -115,7 +115,7 @@ module OrgMode
     # Returns a Configuration object
     def read_and_evaluate
       contents = ::File.open(path).read
-      instance_eval <<-RUBY, path, 0
+      instance_eval <<-RUBY, path.to_s, 0
         ::Configuration.for('org-mode') do
       #{contents}
         end
