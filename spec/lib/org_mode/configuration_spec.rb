@@ -45,8 +45,14 @@ describe OrgMode::Configuration do
 
   context ".create_default_config" do
     it "should write it" do
-      OrgMode::DefaultConfiguration.should_receive(:write_to)
-      OrgMode::Configuration.create_default_config
+      %x[rm -r spec/tmp]
+      %x[mkdir spec/tmp]
+
+      OrgMode::Configuration.create_default_config('spec/tmp', 'orgmoderc')
+
+      File.exist?('spec/tmp/.orgmode').should be_true
+      File.exist?('spec/tmp/.orgmode/gtd.org').should be_true
+      File.exist?('spec/tmp/orgmoderc').should be_true
     end
   end
 end
